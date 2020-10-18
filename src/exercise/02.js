@@ -17,12 +17,25 @@ const setItemInStorage = (key, value) => {
   window.localStorage.setItem(key, JSON.stringify(value))
 }
 
+const removeItemFromStorage = key => {
+  window.localStorage.removeItem(key)
+}
+
 const useLocalStorageState = (key, initialValue) => {
-  const [value, setValue] = React.useState(
-    () => getItemFromStorage(key) || initialValue,
-  )
+  const [value, setValue] = React.useState(() => {
+    const defaultValue =
+      typeof initialValue === 'function' ? initialValue() : initialValue
+    return getItemFromStorage(key) || defaultValue
+  })
+
+  const prevKeyRef = React.useRef(key)
 
   React.useEffect(() => {
+    const prevKey = prevKeyRef.current
+    if (prevKey !== key) {
+      removeItemFromStorage(prevKey)
+    }
+    prevKeyRef.current = key
     setItemInStorage(key, value)
   }, [key, value])
 
