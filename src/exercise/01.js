@@ -1,9 +1,9 @@
 // useState: greeting
 // http://localhost:3000/isolated/exercise/01.js
 
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 
-function Greeting({ initialName = ''}) {
+function Greeting({initialName = ''}) {
   const [name, setName] = useState(initialName)
 
   function handleChange(event) {
