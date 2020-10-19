@@ -1,9 +1,15 @@
 // Lifting state
 // http://localhost:3000/isolated/exercise/03.js
 
-import React from 'react'
+import React, {useState} from 'react'
 
-function Name({name, onNameChange}) {
+function Name() {
+  const [name, setName] = useState('')
+
+  function onNameChange(event) {
+    setName(event.target.value)
+  }
+
   return (
     <div>
       <label htmlFor="name">Name: </label>
@@ -21,8 +27,8 @@ function FavoriteAnimal({animal, onAnimalChange}) {
   )
 }
 
-function Display({name, animal}) {
-  return <div>{`Hey ${name}, your favorite animal is: ${animal}!`}</div>
+function Display({animal}) {
+  return <div>{`Your favorite animal is: ${animal}!`}</div>
 }
 
 function App() {
@@ -35,7 +41,7 @@ function App() {
         animal={animal}
         onAnimalChange={event => setAnimal(event.target.value)}
       />
-      <Display name={name} animal={animal} />
+      <Display animal={animal} />
     </form>
   )
 }
