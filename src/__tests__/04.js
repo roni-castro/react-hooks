@@ -1,8 +1,8 @@
 import React from 'react'
 import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import App from '../final/04'
-// import App from '../exercise/04'
+// import App from '../final/04'
+import App from '../exercise/04'
 
 test('can play a game of tic tac toe', () => {
   render(<App />)
@@ -45,4 +45,13 @@ test('can play a game of tic tac toe', () => {
   expect(screen.getByText('Winner: X')).toBeInTheDocument()
   userEvent.click(s4)
   expect(s4).toHaveTextContent('')
+})
+
+test('does not change square value when it is clicked multiple times', () => {
+  render(<App />)
+  const [square1] = Array.from(screen.queryAllByRole('button'))
+
+  userEvent.click(square1)
+  userEvent.click(square1)
+  expect(square1).toHaveTextContent('X')
 })
