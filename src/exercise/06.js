@@ -14,14 +14,12 @@ import {
 } from '../pokemon'
 import {ErrorBoundary} from 'react-error-boundary'
 
-const initialState = {
-  status: 'idle',
-  pokemon: null,
-  error: null,
-}
-
 function PokemonInfo({pokemonName}) {
-  const [{status, pokemon, error}, setState] = useState(initialState)
+  const [{status, pokemon, error}, setState] = useState({
+    status: pokemonName ? 'pending' : 'idle',
+    pokemon: null,
+    error: null,
+  })
 
   useEffect(() => {
     async function fetchPokemonByTerm(searchTerm) {
