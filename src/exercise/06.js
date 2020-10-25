@@ -1,7 +1,7 @@
 // useEffect: HTTP requests
 // http://localhost:3000/isolated/exercise/06.js
 
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useReducer, useState} from 'react'
 // 🐨 you'll want the following additional things from '../pokemon':
 // fetchPokemon: the function we call to get the pokemon info
 // PokemonInfoFallback: the thing we show while we're loading the pokemon info
@@ -14,18 +14,20 @@ import {
 } from '../pokemon'
 
 function PokemonInfo({pokemonName}) {
+  const [status, setStatus] = useState('idle')
   const [pokemon, setPokemon] = useState(null)
   const [error, setError] = useState(null)
 
   useEffect(() => {
     async function fetchPokemonByTerm(searchTerm) {
       try {
-        setPokemon(null)
-        setError(null)
+        setStatus('pending')
         const pokemonData = await fetchPokemon(searchTerm)
         setPokemon(pokemonData)
+        setStatus('resolved')
       } catch (error) {
         setError(error)
+        setStatus('rejected')
       }
     }
 
@@ -34,21 +36,21 @@ function PokemonInfo({pokemonName}) {
     }
   }, [pokemonName])
 
-  if (!pokemonName) {
+  if (status === 'idle') {
     return 'Submit a pokemon'
   }
 
-  if (error) {
+  if (status === 'pending') {
+    return <PokemonInfoFallback name={pokemonName} />
+  }
+
+  if (status === 'rejected') {
     return (
       <div role="alert">
         There was an error:{' '}
         <pre style={{whiteSpace: 'normal'}}>{error.message}</pre>
       </div>
     )
-  }
-
-  if (!pokemon) {
-    return <PokemonInfoFallback name={pokemonName} />
   }
 
   return <PokemonDataView pokemon={pokemon} />
