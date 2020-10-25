@@ -15,14 +15,18 @@ import {
 
 function PokemonInfo({pokemonName}) {
   const [pokemon, setPokemon] = useState(null)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     async function fetchPokemonByTerm(searchTerm) {
       try {
         setPokemon(null)
+        setError(null)
         const pokemonData = await fetchPokemon(searchTerm)
         setPokemon(pokemonData)
-      } catch (error) {}
+      } catch (error) {
+        setError(error)
+      }
     }
 
     if (pokemonName) {
@@ -33,9 +37,20 @@ function PokemonInfo({pokemonName}) {
   if (!pokemonName) {
     return 'Submit a pokemon'
   }
+
+  if (error) {
+    return (
+      <div role="alert">
+        There was an error:{' '}
+        <pre style={{whiteSpace: 'normal'}}>{error.message}</pre>
+      </div>
+    )
+  }
+
   if (!pokemon) {
     return <PokemonInfoFallback name={pokemonName} />
   }
+
   return <PokemonDataView pokemon={pokemon} />
 }
 
